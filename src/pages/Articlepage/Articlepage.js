@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import "github-markdown-css/github-markdown.css";
 import './Articlepage.css';
 import Markdown from 'react-markdown';
 import {Layout, Divider, Icon} from 'antd';
@@ -28,7 +29,10 @@ class Articlepage extends Component {
                 </span>
             </div>
             <Divider/>
-            <Markdown source={this.props.article.content}/>
+            <Markdown source={this.props.article.content} className="markdown-body" />
+            <div className="article-control">
+                <small>{this.props.article.publishtime}</small>
+            </div>
         </Content>);
     }
 }

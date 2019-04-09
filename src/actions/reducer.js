@@ -7,7 +7,8 @@ const initialState = ({
         activeItem: "article"
     },
     watchArticle: -1,
-    articles: []
+    articles: [],
+    initState: false
 });
 
 export const init = articles => ({
@@ -28,11 +29,13 @@ const appReducer = (state = initialState, action) => {
         case INIT:
             {
                 action.articles.forEach((value) => {
-                    if (value.tags !== null)
-                        value.tags = value.tags.split(",");
+                    if (value.tags !== null) value.tags = value.tags.split(",");
+                    let tempTime = value.publishtime;
+                    value.publishtime = tempTime.substring(0, 10) + " " + tempTime.substring(11, 19);
                 });
                 return Object.assign({}, state, {
-                    articles: action.articles
+                    articles: action.articles,
+                    initState: true
                 });
             }
         case CHANGE_ITEM:

@@ -20,12 +20,28 @@ const stateToDispatch = dispatch => {
 class Articlecard extends Component {
     tagColor = (tagName) => {
         switch (tagName) {
-            case "题解":
+            case "技术":
                 return "blue";
-            case "漫谈":
-                return "red";
+            case "前端":
+                return "volcano";
+            case "后端":
+                return "gold";
+            case "题解":
+                return "purple";
             case "模拟":
                 return "magenta";
+            case "算法":
+                return "geekblue";
+            case "数据结构":
+                return "cyan";
+            case "随笔":
+                return "orange";
+            case "日记":
+                return "lime";
+            case "转载":
+                return "green";
+            case "心得":
+                return "red";
             default:
                 return "";
         }

@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import axios from 'axios';
 import {init} from './../../actions/reducer.js';
 
-const stateToProps = state => ({articles: state.articles});
+const stateToProps = state => ({articles: state.articles, initState: state.initState});
 const stateToDispatch = dispatch => {
     return {
         doInit: () => {
@@ -17,8 +17,9 @@ const stateToDispatch = dispatch => {
 
 class Mainpage extends Component {
     componentWillMount() {
-        this.props.doInit();
-    }
+        if (this.props.initState === false)
+            this.props.doInit();
+        }
     render() {
         return (<div>
             {

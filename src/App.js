@@ -1,28 +1,28 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
+import React, {Component} from 'react';
 import './App.css';
+import Mainpage from './pages/Mainpage/Mainpage';
+import Articlepage from './pages/Articlepage/Articlepage';
+import Header from './components/Header/Header';
+import Footer from './components/Footer/Footer';
+import {createStore} from 'redux';
+import {Provider} from 'react-redux';
+import {Route} from 'react-router-dom';
+import appReducer from './actions/reducer';
+
+const store = createStore(appReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
+    componentWillMount() {
+        document.title = "wYasha";
+    }
+    render() {
+        return (<Provider store={store}>
+            <Header />
+            <Route exact path="/" component={Mainpage} />
+            <Route path="/article" component={Articlepage} />
+            <Footer />
+        </Provider>);
+    }
 }
 
 export default App;

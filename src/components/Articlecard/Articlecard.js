@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-import {Typography, Card, Tag} from 'antd';
+import {Typography, Card, Tag, Icon} from 'antd';
 import 'antd/lib/typography/style/css';
 import 'antd/lib/card/style/css';
 import 'antd/lib/tag/style/css';
@@ -69,9 +69,19 @@ class Articlecard extends Component {
                     })
                 }
             </div>
+            <small>
+                <span>
+                    <Icon type="eye" style={{paddingRight: '0.5em'}}/>{this.props.article.views}
+                </span>
+                <span>
+                    <Icon type="like" style={{padding: '0 0.5em 0 1em'}}/>{this.props.article.likes}
+                </span>
+            </small>
             <small style={{
                     float: 'right'
-                }}>{this.props.article.publishtime}</small>
+                }}>
+                {this.props.article.publishtime}
+            </small>
         </Card>);
     }
 }

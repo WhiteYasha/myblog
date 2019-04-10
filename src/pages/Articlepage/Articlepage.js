@@ -11,7 +11,7 @@ const {Content} = Layout;
 const stateToProps = state => ({
     article: state.watchArticle === -1
         ? null
-        : state.articles[state.watchArticle - 1]
+        : state.articles[state.articles.length - state.watchArticle]
 });
 
 class Articlepage extends Component {

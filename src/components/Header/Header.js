@@ -41,10 +41,10 @@ class Header extends Component {
                         <Avatar src={avatarimg}/>
                     </Item>
                     <span>wYasha</span>
-                    <Item className="header-menu-item" key="message">
+                    <Item className="header-menu-item" key="message" disabled>
                         <Icon type="message"/>留言
                     </Item>
-                    <Item className="header-menu-item" key="picture">
+                    <Item className="header-menu-item" key="picture" disabled>
                         <Icon type="picture"/>相册
                     </Item>
                     <Item className="header-menu-item" key="article">

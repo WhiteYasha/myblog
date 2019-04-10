@@ -9,7 +9,7 @@ class Footer extends Component {
                 textAlign: 'center'
             }}>
             <h1 style={{
-                    borderBottom: '2px blue solid',
+                    borderBottom: '2px #1890ff solid',
                     width: '8em',
                     marginLeft: 'calc(50% - 4em)'
                 }}>

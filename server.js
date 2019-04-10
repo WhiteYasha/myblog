@@ -21,12 +21,38 @@ app.get("/init", (req, res) => {
     pool.getConnection((err, connection) => {
         if (err) console.log(err);
         else {
-            connection.query("SELECT * FROM articles", (err, result) => {
+            connection.query("SELECT * FROM articles_view", (err, result) => {
                 if (err) console.log(err);
-                else console.log("Init Succeed!");
-                res.send(result);
+                else {
+                    result.forEach((item) => {
+                        if (item.tags !== null) item.tags = item.tags.split(",");
+                        const datetime = item.publishtime;
+                        item.publishtime = `${datetime.getFullYear()}-${datetime.getMonth()}-${datetime.getDate()} ${datetime.getHours()}:${datetime.getMinutes()}:${datetime.getSeconds()}`;
+                    });
+                    res.send(result);
+                }
                 connection.release();
             })
+        }
+    });
+});
+app.get("/sort", (req, res) => {
+    const type = req.query.type;
+    pool.getConnection((err, connection) => {
+        if (err) console.log(err);
+        else {
+            connection.query("SELECT * FROM articles ORDER BY " + type + " DESC", (err, result) => {
+                if (err) console.log(err);
+                else {
+                    result.forEach((item) => {
+                        if (item.tags !== null) item.tags = item.tags.split(",");
+                        const datetime = item.publishtime;
+                        item.publishtime = `${datetime.getFullYear()}-${datetime.getMonth()}-${datetime.getDate()} ${datetime.getHours()}:${datetime.getMinutes()}:${datetime.getSeconds()}`;
+                    });
+                    res.send(result);
+                }
+                connection.release();
+            });
         }
     });
 });

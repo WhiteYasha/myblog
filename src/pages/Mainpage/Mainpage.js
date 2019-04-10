@@ -16,7 +16,7 @@ const stateToDispatch = dispatch => {
             })
         },
         doChangeShowArticles: (state) => {
-            axios.get("http://localhost:9000/sortviews", {params: {type: state}})
+            axios.get("http://localhost:9000/sort", {params: {type: state}})
             .then((response) => {
                 dispatch(changeShowArticles(state, response.data));
             });

@@ -2,6 +2,7 @@ const INIT = "INIT";
 const CHANGE_ITEM = "CHANGE_ITEM";
 const CHANGE_WATCH_ARTICLE = "CHANGE_WATCH_ARTICLE";
 const CHANGE_SHOW_ARTICLES = "CHANGE_SHOW_ARTICLES";
+const CHANGE_LIKES = "CHANGE_LIKES";
 
 const initialState = ({
     home: {
@@ -31,6 +32,11 @@ export const changeShowArticles = (sorttype, articles) => ({
     sorttype,
     articles
 });
+export const changeLikes = (number) => ({
+    type: CHANGE_LIKES,
+    number
+});
+
 const appReducer = (state = initialState, action) => {
     switch (action.type) {
         case INIT:
@@ -60,6 +66,18 @@ const appReducer = (state = initialState, action) => {
                 return Object.assign({}, state, {
                     showarticles: action.articles,
                     showState: action.sorttype
+                });
+            }
+        case CHANGE_LIKES:
+            {
+                return Object.assign({}, state, {
+                    articles: state.articles.map((item) => {
+                        if (item.id === state.watchArticle) {
+                            item.likes += action.number;
+                            return item;
+                        }
+                        else return item;
+                    })
                 });
             }
         default:

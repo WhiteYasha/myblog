@@ -6,7 +6,6 @@ import {Layout, Divider, Icon} from 'antd';
 import 'antd/lib/layout/style/css';
 import 'antd/lib/divider/style/css';
 import {connect} from 'react-redux';
-import {changeLikes} from './../../actions/reducer.js';
 
 const {Content} = Layout;
 const stateToProps = state => ({
@@ -14,13 +13,6 @@ const stateToProps = state => ({
         ? null
         : state.articles[state.articles.length - state.watchArticle]
 });
-const stateToDispatch = dispatch => {
-    return {
-        doChangeLikes: () => {
-            dispatch(changeLikes(1));
-        }
-    }
-};
 
 class Articlepage extends Component {
     render() {
@@ -35,10 +27,9 @@ class Articlepage extends Component {
                 <span>
                     <Icon type="like"/>{this.props.article.likes}
                 </span>
-                <button onClick={this.props.doChangeLikes}>test</button>
             </div>
             <Divider/>
-            <Markdown source={this.props.article.content} className="markdown-body" />
+            <Markdown source={this.props.article.content} className="markdown-body"/>
             <div className="article-control">
                 <small>{this.props.article.publishtime}</small>
             </div>
@@ -46,4 +37,4 @@ class Articlepage extends Component {
     }
 }
 
-export default connect(stateToProps, stateToDispatch)(Articlepage);
+export default connect(stateToProps)(Articlepage);

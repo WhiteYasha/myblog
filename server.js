@@ -7,7 +7,9 @@ const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 
 var pool = mysql.createPool({
     host: "localhost",
@@ -61,6 +63,32 @@ app.get("/sort", (req, res) => {
                     });
                     res.send(result);
                 }
+                connection.release();
+            });
+        }
+    });
+});
+app.get("/login", (req, res) => {
+    let userName = req.query.userName,
+        password = req.query.password;
+    pool.getConnection((err, connection) => {
+        if (err) console.log(err);
+        else {
+            connection.query("SELECT * FROM users WHERE user_name = '" + userName + "'", (err, result) => {
+                if (err) console.log(err);
+                else res.send(result);
+                connection.release();
+            });
+        }
+    });
+});
+app.get("/loginsuccess", (req, res) => {
+    const userName = req.query.userName;
+    pool.getConnection((err, connection) => {
+        if (err) console.log(err);
+        else {
+            connection.query("UPDATE users SET lastlogintime=NOW() WHERE user_name = '" + userName + "'", (err, result) => {
+                if (err) console.log(err);
                 connection.release();
             });
         }

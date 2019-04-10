@@ -2,14 +2,17 @@ const INIT = "INIT";
 const CHANGE_ITEM = "CHANGE_ITEM";
 const CHANGE_WATCH_ARTICLE = "CHANGE_WATCH_ARTICLE";
 const CHANGE_SHOW_ARTICLES = "CHANGE_SHOW_ARTICLES";
+const LOG_IN = "LOG_IN";
 
 const initialState = ({
+    user: null,
+    isLoggedIn: false,
     home: {
         activeItem: "article"
     },
     watchArticle: -1,
     articles: [],
-    showarticles: [],
+    showArticles: [],
     showState: "publishtime",
     initState: false
 });
@@ -31,6 +34,10 @@ export const changeShowArticles = (sorttype, articles) => ({
     sorttype,
     articles
 });
+export const logIn = (user) => ({
+    type: LOG_IN,
+    user
+});
 
 const appReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -38,7 +45,7 @@ const appReducer = (state = initialState, action) => {
             {
                 return Object.assign({}, state, {
                     articles: action.articles,
-                    showarticles: action.articles,
+                    showArticles: action.articles,
                     initState: true
                 });
             }
@@ -59,8 +66,15 @@ const appReducer = (state = initialState, action) => {
         case CHANGE_SHOW_ARTICLES:
             {
                 return Object.assign({}, state, {
-                    showarticles: action.articles,
+                    showArticles: action.articles,
                     showState: action.sorttype
+                });
+            }
+        case LOG_IN:
+            {
+                return Object.assign({}, state, {
+                    user: action.user,
+                    isLoggedIn: true
                 });
             }
         default:

@@ -7,7 +7,7 @@ import {Row, Col, Radio} from 'antd';
 import 'antd/lib/row/style/css';
 import 'antd/lib/radio/style/css';
 
-const stateToProps = state => ({articles: state.showarticles, showState: state.showState, initState: state.initState});
+const stateToProps = state => ({articles: state.showArticles, showState: state.showState, initState: state.initState});
 const stateToDispatch = dispatch => {
     return {
         doInit: () => {

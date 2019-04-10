@@ -3,7 +3,6 @@ import './Header.css';
 import {connect} from 'react-redux';
 import {Row, Col, Menu, Icon, Avatar} from 'antd';
 import {changeItem} from './../../actions/reducer.js';
-import avatarimg from './../../img/avatar.JPG';
 import 'antd/lib/avatar/style/css';
 import 'antd/lib/menu/style/css';
 import 'antd/lib/row/style/css';
@@ -11,6 +10,8 @@ import {Link} from 'react-router-dom';
 
 const Item = Menu.Item;
 const stateToProps = state => ({
+    user: state.user,
+    isLoggedIn: state.isLoggedIn,
     activeItem: [state.home.activeItem]
 });
 const stateToDispatch = dispatch => {
@@ -35,13 +36,25 @@ class Header extends Component {
                 }}>
                 <img className="header-img"/>
                 <Menu mode="horizontal" selectedKeys={this.props.activeItem} onClick={(item) => this.changePage(item.key)}>
-                    <Item key="avatar" style={{
-                            marginLeft: '3%'
-                        }} disabled>
-                        <Avatar src={avatarimg}/>
-                    </Item>
-                    <span>wYasha</span>
-                    <Item className="header-menu-item" key="message" disabled>
+                    {
+                        this.props.isLoggedIn
+                            ? <Item key="avatar" style={{
+                                        marginLeft: '3%'
+                                    }} disabled>
+                                    <Avatar>{this.props.user.user_name.substring(0, 3)}</Avatar>
+                                </Item>
+                            : <Item key="login" style={{
+                                        marginLeft: '3%'
+                                    }}>
+                                    <Link to="/login">登陆</Link>
+                                </Item>
+                    }
+                    {
+                        this.props.isLoggedIn
+                            ? <span>{this.props.user.user_name}</span>
+                            : null
+                    }
+                    <Item className="header-menu-item" key="message">
                         <Icon type="message"/>留言
                     </Item>
                     <Item className="header-menu-item" key="picture" disabled>

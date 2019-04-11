@@ -6,12 +6,20 @@ import 'antd/lib/card/style/css';
 import 'antd/lib/tag/style/css';
 import {changeWatchArticle} from './../../actions/reducer.js';
 import {connect} from 'react-redux';
+import axios from 'axios';
 
 const {Paragraph} = Typography;
 const stateToProps = state => ({watchArticle: state.watchArticle});
 const stateToDispatch = dispatch => {
     return {
-        doChangeWatchArticle: (id) => {
+        doChangeWatchArticle: (id, views) => {
+            let data = {
+                params: {
+                    id: id,
+                    views: views
+                }
+            };
+            axios.get("http://localhost:9000/view", data);
             dispatch(changeWatchArticle(id));
         }
     }
@@ -47,7 +55,7 @@ class Articlecard extends Component {
         }
     }
     handleClick = () => {
-        this.props.doChangeWatchArticle(this.props.article.id);
+        this.props.doChangeWatchArticle(this.props.article.id, this.props.article.views + 1);
     }
     render() {
         return (<Card title={this.props.article.title} extra={<Link to = "/article" onClick = {

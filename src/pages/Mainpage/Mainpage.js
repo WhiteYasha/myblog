@@ -7,7 +7,7 @@ import {Row, Col, Radio} from 'antd';
 import 'antd/lib/row/style/css';
 import 'antd/lib/radio/style/css';
 
-const stateToProps = state => ({articles: state.showArticles, showState: state.showState, initState: state.initState});
+const stateToProps = state => ({articles: state.showArticles, showState: state.showState});
 const stateToDispatch = dispatch => {
     return {
         doInit: () => {
@@ -26,9 +26,7 @@ const stateToDispatch = dispatch => {
 
 class Mainpage extends Component {
     componentWillMount() {
-        if (this.props.initState === false) {
-            this.props.doInit();
-        }
+        this.props.doInit();
     }
     handleChange = (e) => {
         let newState = e.target.value;

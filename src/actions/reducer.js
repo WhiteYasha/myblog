@@ -13,8 +13,7 @@ const initialState = ({
     watchArticle: -1,
     articles: [],
     showArticles: [],
-    showState: "publishtime",
-    initState: false
+    showState: "publishtime"
 });
 
 export const init = articles => ({
@@ -60,7 +59,10 @@ const appReducer = (state = initialState, action) => {
         case CHANGE_WATCH_ARTICLE:
             {
                 return Object.assign({}, state, {
-                    watchArticle: action.id
+                    watchArticle: action.id,
+                    articles: state.articles.map((item) => {
+                        return item.id === action.id ? Object.assign({}, item, {views: item.views + 1}) : item;
+                    })
                 });
             }
         case CHANGE_SHOW_ARTICLES:

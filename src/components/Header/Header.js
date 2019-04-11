@@ -34,7 +34,7 @@ class Header extends Component {
                     width: '100%',
                     height: '300px'
                 }}>
-                <img className="header-img"/>
+                <div className="header-img" />
                 <Menu mode="horizontal" selectedKeys={this.props.activeItem} onClick={(item) => this.changePage(item.key)}>
                     {
                         this.props.isLoggedIn

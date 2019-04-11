@@ -41,7 +41,19 @@ app.get("/init", (req, res) => {
                     res.send(result);
                 }
                 connection.release();
-            })
+            });
+        }
+    });
+});
+app.get("/view", (req, res) => {
+    let id = req.query.id, views = req.query.views;
+    pool.getConnection((err, connection) => {
+        if (err) console.log(err);
+        else {
+            connection.query("UPDATE articles SET views = " + views + " WHERE id = " + id, (err, result) => {
+                if (err) console.log(err);
+                connection.release();
+            });
         }
     });
 });

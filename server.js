@@ -2,6 +2,8 @@ const express = require('express');
 var cors = require('cors');
 var bodyParser = require('body-parser');
 var mysql = require('mysql');
+const jwt = require('jsonwebtoken');
+const secret = 'wyasha';
 const port = 9000;
 const app = express();
 
@@ -76,14 +78,17 @@ app.get("/login", (req, res) => {
         else {
             connection.query("SELECT * FROM users WHERE user_name = '" + userName + "'", (err, result) => {
                 if (err) console.log(err);
-                else res.send(result);
+                else {
+                    res.send(result);
+                }
                 connection.release();
             });
         }
     });
 });
 app.get("/loginsuccess", (req, res) => {
-    const userName = req.query.userName;
+    let userName = req.query.userName,
+        password = req.query.password;
     pool.getConnection((err, connection) => {
         if (err) console.log(err);
         else {
@@ -93,6 +98,11 @@ app.get("/loginsuccess", (req, res) => {
             });
         }
     });
+    let token = jwt.sign({
+        userName: userName,
+        password: password
+    }, secret);
+    res.send(token);
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

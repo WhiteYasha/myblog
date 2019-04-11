@@ -40,18 +40,22 @@ class Loginpage extends Component {
                         password: password
                     }
                 };
-                axios.get("http://localhost:9000/login", data).then((response) => {
+                axios.get("http://localhost:9000/login", data)
+                .then((response) => {
                     let user = response.data;
                     if (user.length === 0)
                         message.error("没有此用户!");
                     else if (user[0].password !== password)
                         message.error("密码错误!");
                     else {
+                        axios.get("http://localhost:9000/loginsuccess", data)
+                        .then((res) => {
+                            let token = res.data;
+                            axios.defaults.headers.common.authorization = token;
+                        });
                         message.success("登录成功!");
                         this.props.doLogIn(user[0]);
                     }
-                }).then(() => {
-                    axios.get("http://localhost:9000/loginsuccess", data);
                 });
             }
         });

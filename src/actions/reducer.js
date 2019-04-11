@@ -2,6 +2,7 @@ const INIT = "INIT";
 const CHANGE_ITEM = "CHANGE_ITEM";
 const CHANGE_WATCH_ARTICLE = "CHANGE_WATCH_ARTICLE";
 const CHANGE_SHOW_ARTICLES = "CHANGE_SHOW_ARTICLES";
+const CHANGE_LIKES = "CHANGE_LIKES";
 const LOG_IN = "LOG_IN";
 
 const initialState = ({
@@ -38,6 +39,12 @@ export const logIn = (user) => ({
     type: LOG_IN,
     user
 });
+export const changeLikes = (id, likes, likeuser) => ({
+    type: CHANGE_LIKES,
+    id,
+    likes,
+    likeuser
+});
 
 const appReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -62,10 +69,14 @@ const appReducer = (state = initialState, action) => {
                 return Object.assign({}, state, {
                     watchArticle: action.id,
                     articles: state.articles.map((item) => {
-                        return item.id === action.id ? Object.assign({}, item, {views: item.views + 1}) : item;
+                        return item.id === action.id ? Object.assign({}, item, {
+                            views: item.views + 1
+                        }) : item;
                     }),
                     showArticles: state.articles.map((item) => {
-                        return item.id === action.id ? Object.assign({}, item, {views: item.views + 1}) : item;
+                        return item.id === action.id ? Object.assign({}, item, {
+                            views: item.views + 1
+                        }) : item;
                     })
                 });
             }
@@ -81,6 +92,23 @@ const appReducer = (state = initialState, action) => {
                 return Object.assign({}, state, {
                     user: action.user,
                     isLoggedIn: true
+                });
+            }
+        case CHANGE_LIKES:
+            {
+                return Object.assign({}, state, {
+                    articles: state.articles.map((item) => {
+                        return item.id === action.id ? Object.assign({}, item, {
+                            likes: action.likes,
+                            likeuser: action.likeuser
+                        }) : item;
+                    }),
+                    showArticles: state.showArticles.map((item) => {
+                        return item.id === action.id ? Object.assign({}, item, {
+                            likes: action.likes,
+                            likeuser: action.likeuser
+                        }) : item;
+                    })
                 });
             }
         default:

@@ -46,11 +46,26 @@ app.get("/init", (req, res) => {
     });
 });
 app.get("/view", (req, res) => {
-    let id = req.query.id, views = req.query.views;
+    let id = req.query.id,
+        views = req.query.views;
     pool.getConnection((err, connection) => {
         if (err) console.log(err);
         else {
             connection.query("UPDATE articles SET views = " + views + " WHERE id = " + id, (err, result) => {
+                if (err) console.log(err);
+                connection.release();
+            });
+        }
+    });
+});
+app.get("/like", (req, res) => {
+    let id = req.query.id,
+        likes = req.query.likes,
+        likeuser = req.query.likeuser;
+    pool.getConnection((err, connection) => {
+        if (err) console.log(err);
+        else {
+            connection.query("UPDATE articles SET likes = " + likes + ", likeuser = '" + likeuser + "' WHERE id = " + id, (err, result) => {
                 if (err) console.log(err);
                 connection.release();
             });

@@ -30,6 +30,7 @@ app.get("/init", (req, res) => {
                 else {
                     result.forEach((item) => {
                         if (item.tags !== null) item.tags = item.tags.split(",");
+                        if (item.likeuser === null) item.likeuser = "";
                         const year = item.publishtime.getFullYear(),
                             month = item.publishtime.getMonth() + 1,
                             day = item.publishtime.getDate(),
@@ -82,6 +83,7 @@ app.get("/sort", (req, res) => {
                 else {
                     result.forEach((item) => {
                         if (item.tags !== null) item.tags = item.tags.split(",");
+                        if (item.likeuser === null) item.likeuser = "";
                         const year = item.publishtime.getFullYear(),
                             month = item.publishtime.getMonth() + 1,
                             day = item.publishtime.getDate(),

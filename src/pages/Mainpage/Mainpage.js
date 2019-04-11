@@ -7,13 +7,13 @@ import {Row, Col, Radio} from 'antd';
 import 'antd/lib/row/style/css';
 import 'antd/lib/radio/style/css';
 
-const stateToProps = state => ({articles: state.showArticles, showState: state.showState});
+const stateToProps = state => ({showArticles: state.showArticles, showState: state.showState, initState: state.initState});
 const stateToDispatch = dispatch => {
     return {
         doInit: () => {
             axios.get("http://localhost:9000/init").then((response) => {
                 dispatch(init(response.data));
-            })
+            });
         },
         doChangeShowArticles: (state) => {
             axios.get("http://localhost:9000/sort", {params: {type: state}})
@@ -26,7 +26,9 @@ const stateToDispatch = dispatch => {
 
 class Mainpage extends Component {
     componentWillMount() {
-        this.props.doInit();
+        if (this.props.initState === false) {
+            this.props.doInit();
+        }
     }
     handleChange = (e) => {
         let newState = e.target.value;
@@ -48,7 +50,7 @@ class Mainpage extends Component {
                 </Col>
             </Row>
             {
-                this.props.articles.map((item, key) => {
+                this.props.showArticles.map((item, key) => {
                     return (<div style={{
                             margin: '1em',
                             width: 'calc((100% - 6em) / 3)',

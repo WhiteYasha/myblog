@@ -13,6 +13,7 @@ const initialState = ({
     watchArticle: -1,
     articles: [],
     showArticles: [],
+    initState: false,
     showState: "publishtime"
 });
 
@@ -61,6 +62,9 @@ const appReducer = (state = initialState, action) => {
                 return Object.assign({}, state, {
                     watchArticle: action.id,
                     articles: state.articles.map((item) => {
+                        return item.id === action.id ? Object.assign({}, item, {views: item.views + 1}) : item;
+                    }),
+                    showArticles: state.articles.map((item) => {
                         return item.id === action.id ? Object.assign({}, item, {views: item.views + 1}) : item;
                     })
                 });

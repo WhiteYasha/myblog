@@ -6,10 +6,6 @@
 
 - Node.js+Express+Mysql实现后端服务
 
-
-- 富文本编辑器用到了React-Markdown组件，CSS样式是Github-markdown-css
-
-
 - 路由功能使用的是React-Router
 
 
@@ -20,8 +16,6 @@
 
 
 ```
-
-
 └── myblog
     ├──components # 自定义组件
     ├──pages # 页面组件
@@ -29,8 +23,6 @@
     ├── node_modules # 依赖模块
     ├── package.json # 依赖配置
     ├── app.js # 应用
-
-
 ```
 
 

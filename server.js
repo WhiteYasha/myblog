@@ -231,8 +231,9 @@ app.get("/loginsuccess", (req, res) => {
     res.send(token);
 });
 app.get("/message", (req, res) => {
-    let userName = req.query.userName,
-        message = req.query.message;
+    let userName = req.query.user_name,
+        message = req.query.message,
+        messagetime = req.query.messagetime;
     const token = req.headers.authorization;
     jwt.verify(token, secret, (err, decoded) => {
         if (err) {
@@ -247,8 +248,7 @@ app.get("/message", (req, res) => {
                     console.log(err);
                 else {
                     connection.query("INSERT INTO messages(user_name, message, messagetime) VALUES ('" + userName + "', '" + message + "', '" + messagetime + "')", (err, result) => {
-                        if (err)
-                            console.log(err);
+                        if (err) console.log(err);
                         connection.release();
                     });
                 }

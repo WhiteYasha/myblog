@@ -144,10 +144,10 @@ const appReducer = (state = initialState, action) => {
             }
         case ADD_MESSAGE:
             {
-                return Object.assign({}, state, {
-                    messages: { ...action.message
-                    }
-                });
+                var newState = Object.assign({}, state);
+                newState.messages.unshift(action.message);
+                console.log(newState);
+                return newState;
             }
         default:
             return state;

@@ -2,17 +2,17 @@ import React, {Component} from 'react';
 import Articlecard from "./../../components/Articlecard/Articlecard";
 import {connect} from 'react-redux';
 import axios from 'axios';
-import {init, changeShowArticles} from './../../actions/reducer.js';
+import {initArticles, changeShowArticles} from './../../actions/reducer.js';
 import {Row, Col, Radio} from 'antd';
 import 'antd/lib/row/style/css';
 import 'antd/lib/radio/style/css';
 
-const stateToProps = state => ({showArticles: state.showArticles, showState: state.showState, initState: state.initState});
+const stateToProps = state => ({showArticles: state.showArticles, showState: state.showState, initState: state.initState.initArticles});
 const stateToDispatch = dispatch => {
     return {
-        doInit: () => {
-            axios.get("http://localhost:9000/init").then((response) => {
-                dispatch(init(response.data));
+        doInitArticles: () => {
+            axios.get("http://localhost:9000/initarticles").then((response) => {
+                dispatch(initArticles(response.data));
             });
         },
         doChangeShowArticles: (state) => {
@@ -28,9 +28,10 @@ const stateToDispatch = dispatch => {
 };
 
 class Mainpage extends Component {
-    componentWillMount() {
+    constructor(props) {
+        super(props);
         if (this.props.initState === false) {
-            this.props.doInit();
+            this.props.doInitArticles();
         }
     }
     handleChange = (e) => {

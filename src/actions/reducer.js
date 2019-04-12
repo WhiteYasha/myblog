@@ -1,26 +1,38 @@
-const INIT = "INIT";
+const INIT_ARTICLES = "INIT_ARTICLES";
+const INIT_MESSAGES = "INIT_MESSAGES";
 const CHANGE_ITEM = "CHANGE_ITEM";
 const CHANGE_WATCH_ARTICLE = "CHANGE_WATCH_ARTICLE";
 const CHANGE_SHOW_ARTICLES = "CHANGE_SHOW_ARTICLES";
 const CHANGE_LIKES = "CHANGE_LIKES";
 const LOG_IN = "LOG_IN";
+const CHANGE_LOADING = "CHANGE_LOADING";
+const ADD_MESSAGE = "ADD_MESSAGE";
 
 const initialState = ({
     user: null,
     isLoggedIn: false,
-    home: {
-        activeItem: "article"
-    },
     watchArticle: -1,
+    activeItem: null,
     articles: [],
     showArticles: [],
-    initState: false,
-    showState: "publishtime"
+    messages: [],
+    initState: {
+        initArticles: false,
+        initMessages: false
+    },
+    showState: "publishtime",
+    loading: {
+        messageLoading: false
+    }
 });
 
-export const init = articles => ({
-    type: INIT,
+export const initArticles = articles => ({
+    type: INIT_ARTICLES,
     articles
+});
+export const initMessages = messages => ({
+    type: INIT_MESSAGES,
+    messages
 });
 export const changeItem = item => ({
     type: CHANGE_ITEM,
@@ -45,23 +57,36 @@ export const changeLikes = (id, likes, likeuser) => ({
     likes,
     likeuser
 });
+export const changeLoading = (loading) => ({
+    type: CHANGE_LOADING,
+    loading
+})
+export const addMessage = message => ({
+    type: ADD_MESSAGE,
+    message
+});
 
 const appReducer = (state = initialState, action) => {
     switch (action.type) {
-        case INIT:
+        case INIT_ARTICLES:
             {
                 return Object.assign({}, state, {
                     articles: action.articles,
                     showArticles: action.articles,
-                    initState: true
+                    initState: Object.assign({}, state.initState, {initArticles: true})
+                });
+            }
+        case INIT_MESSAGES:
+            {
+                return Object.assign({}, state, {
+                    messages: action.messages,
+                    initState: Object.assign({}, state.initState, {initMessages: true})
                 });
             }
         case CHANGE_ITEM:
             {
                 return Object.assign({}, state, {
-                    home: {
-                        activeItem: action.item
-                    }
+                    activeItem: action.item
                 });
             }
         case CHANGE_WATCH_ARTICLE:
@@ -109,6 +134,19 @@ const appReducer = (state = initialState, action) => {
                             likeuser: action.likeuser
                         }) : item;
                     })
+                });
+            }
+        case CHANGE_LOADING:
+            {
+                return Object.assign({}, state, {
+                    loading: action.loading
+                });
+            }
+        case ADD_MESSAGE:
+            {
+                return Object.assign({}, state, {
+                    messages: { ...action.message
+                    }
                 });
             }
         default:

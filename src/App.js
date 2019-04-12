@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Mainpage from './pages/Mainpage/Mainpage';
 import Articlepage from './pages/Articlepage/Articlepage';
+import Messagepage from './pages/Messagepage/Messagepage';
 import Loginpage from './pages/Loginpage/Loginpage';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
@@ -20,6 +21,7 @@ class App extends Component {
             <Header />
             <Route exact path="/" component={Mainpage} />
             <Route path="/article" component={Articlepage} />
+            <Route path="/message" component={Messagepage} />
             <Route path="/login" component={Loginpage} />
             <Footer />
         </Provider>);

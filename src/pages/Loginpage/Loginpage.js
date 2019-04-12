@@ -91,7 +91,7 @@ class Loginpage extends Component {
                                             message: "请输入密码!"
                                         }
                                     ]
-                                })(<Input type="password" prefix={<Icon type = "lock" style = {{color: 'rgba(0,0,0,.25)'}}/>} placeholder="密码"/>)
+                                })(<Input.Password prefix={<Icon type = "lock" style = {{color: 'rgba(0,0,0,.25)'}}/>} placeholder="密码"/>)
                             }
                         </Form.Item>
                         <Form.Item>

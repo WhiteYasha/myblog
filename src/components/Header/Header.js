@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import './Header.css';
 import {connect} from 'react-redux';
-import {Row, Col, Menu, Icon, Avatar} from 'antd';
 import {changeItem} from './../../actions/reducer.js';
+import {Row, Col, Menu, Icon, Avatar} from 'antd';
 import 'antd/lib/avatar/style/css';
 import 'antd/lib/menu/style/css';
 import 'antd/lib/row/style/css';
@@ -11,8 +11,8 @@ import {Link} from 'react-router-dom';
 const Item = Menu.Item;
 const stateToProps = state => ({
     user: state.user,
-    isLoggedIn: state.isLoggedIn,
-    activeItem: [state.home.activeItem]
+    activeItem: [state.activeItem],
+    isLoggedIn: state.isLoggedIn
 });
 const stateToDispatch = dispatch => {
     return {
@@ -20,9 +20,23 @@ const stateToDispatch = dispatch => {
             dispatch(changeItem(item));
         }
     }
-}
+};
 
 class Header extends Component {
+    constructor(props) {
+        super(props);
+        let pathname = window.location.pathname,
+            activeItem;
+        if (pathname === "/login")
+            activeItem = "login";
+        else if (pathname === "/message")
+            activeItem = "message";
+        else if (pathname === "/picture")
+            activeItem = "picture";
+        else
+            activeItem = "article";
+        this.props.doChangeItem(activeItem);
+    }
     changePage = key => {
         this.props.doChangeItem(key);
     }
@@ -34,7 +48,7 @@ class Header extends Component {
                     width: '100%',
                     height: '300px'
                 }}>
-                <div className="header-img" />
+                <div className="header-img"/>
                 <Menu mode="horizontal" selectedKeys={this.props.activeItem} onClick={(item) => this.changePage(item.key)}>
                     {
                         this.props.isLoggedIn
@@ -55,7 +69,9 @@ class Header extends Component {
                             : null
                     }
                     <Item className="header-menu-item" key="message">
-                        <Icon type="message"/>留言
+                        <Link to="/message">
+                            <Icon type="message"/>留言
+                        </Link>
                     </Item>
                     <Item className="header-menu-item" key="picture" disabled>
                         <Icon type="picture"/>相册

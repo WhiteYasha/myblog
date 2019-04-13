@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import {Comment, List, Avatar, Spin} from 'antd';
-import 'antd/lib/spin/style/css';
+import {Comment, List, Avatar} from 'antd';
 import 'antd/lib/comment/style/css';
 import 'antd/lib/list/style/css';
 import 'antd/lib/avatar/style/css';
@@ -13,7 +12,7 @@ const stateToProps = state => ({messages: state.messages, loading: state.loading
 const stateToDispatch = dispatch => {
     return {
         doInitMessages: () => {
-            axios.get("http://localhost:9000/initmessages").then((response) => {
+            axios.get("http://47.111.165.97:9000/initmessages").then((response) => {
                 dispatch(initMessages(response.data));
             });
         },
@@ -26,37 +25,31 @@ const stateToDispatch = dispatch => {
 class Messagepage extends Component {
     constructor(props) {
         super(props);
+        this.props.doChangeLoading(Object.assign({}, this.props.loading, {messageLoading: true}));
         this.props.doInitMessages();
-        this.props.doChangeLoading(Object.assign({}, this.props.loading, {
-            messageLoading: true
-        }));
     }
     componentDidMount() {
-        this.props.doChangeLoading(Object.assign({}, this.props.loading, {
-            messageLoading: false
-        }));
+        this.props.doChangeLoading(Object.assign({}, this.props.loading, {messageLoading: false}));
     }
     render() {
         return (<div style={{
                 padding: '0 10%'
             }}>
             <Messageform/>
-            <Spin spinning={this.props.loading.messageLoading}>
-                <List pagination={{
-                        onChange: (page) => {
-                            console.log(page);
-                        },
-                        pageSize: 10
-                    }} itemLayout="vertical" dataSource={this.props.messages} style={{
-                        padding: '1em 2em'
-                    }} renderItem={item => (<Comment avatar={<Avatar> {
-                            item.user_name.substring(0, 3)
-                        }
-                        </Avatar>} author={item.user_name} datetime={item.messagetime} content={<p> {
-                            item.message
-                        }
-                        </p>}/>)}/>
-            </Spin>
+            <List loading={this.props.loading.messageLoading} pagination={{
+                    onChange: (page) => {
+                        console.log(page);
+                    },
+                    pageSize: 10
+                }} itemLayout="vertical" dataSource={this.props.messages} style={{
+                    padding: '1em 2em'
+                }} renderItem={item => (<Comment avatar={<Avatar> {
+                        item.user_name.substring(0, 3)
+                    }
+                    </Avatar>} author={item.user_name} datetime={item.messagetime} content={<p> {
+                        item.message
+                    }
+                    </p>}/>)}/>
         </div>);
     }
 }

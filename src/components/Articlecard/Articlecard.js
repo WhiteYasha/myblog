@@ -19,7 +19,7 @@ const stateToDispatch = dispatch => {
                     views: views
                 }
             };
-            axios.get("http://localhost:9000/view", data);
+            axios.get("http://47.111.165.97:9000/view", data);
             dispatch(changeWatchArticle(id));
         }
     }

@@ -7,6 +7,7 @@ const CHANGE_LIKES = "CHANGE_LIKES";
 const LOG_IN = "LOG_IN";
 const CHANGE_LOADING = "CHANGE_LOADING";
 const ADD_MESSAGE = "ADD_MESSAGE";
+const CHANGE_SIGN_VISIBLE = "CHANGE_SIGN_VISIBLE";
 
 const initialState = ({
     user: null,
@@ -22,8 +23,12 @@ const initialState = ({
     },
     showState: "publishtime",
     loading: {
-        messageLoading: false
-    }
+        articleLoading: false,
+        messageLoading: false,
+        logLoading: false,
+        signLoading: false
+    },
+    signVisible: false
 });
 
 export const initArticles = articles => ({
@@ -65,6 +70,10 @@ export const addMessage = message => ({
     type: ADD_MESSAGE,
     message
 });
+export const changeSignVisible = visible => ({
+    type: CHANGE_SIGN_VISIBLE,
+    visible
+});
 
 const appReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -73,14 +82,18 @@ const appReducer = (state = initialState, action) => {
                 return Object.assign({}, state, {
                     articles: action.articles,
                     showArticles: action.articles,
-                    initState: Object.assign({}, state.initState, {initArticles: true})
+                    initState: Object.assign({}, state.initState, {
+                        initArticles: true
+                    })
                 });
             }
         case INIT_MESSAGES:
             {
                 return Object.assign({}, state, {
                     messages: action.messages,
-                    initState: Object.assign({}, state.initState, {initMessages: true})
+                    initState: Object.assign({}, state.initState, {
+                        initMessages: true
+                    })
                 });
             }
         case CHANGE_ITEM:
@@ -148,6 +161,12 @@ const appReducer = (state = initialState, action) => {
                 newState.messages.unshift(action.message);
                 console.log(newState);
                 return newState;
+            }
+        case CHANGE_SIGN_VISIBLE:
+            {
+                return Object.assign({}, state, {
+                    signVisible: action.visible
+                });
             }
         default:
             return state;

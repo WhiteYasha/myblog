@@ -257,5 +257,32 @@ app.get("/message", (req, res) => {
     });
     res.end();
 });
+app.get("/finduser", (req, res) => {
+    let userName = req.query.user_name;
+    pool.getConnection((err, connection) => {
+        connection.query("SELECT * FROM users WHERE user_name='" + userName + "'", (err, result) => {
+            if (err) console.log(err);
+            else {
+                if (result.length === 0) res.send(false);
+                else res.send(true);
+            }
+            connection.release();
+        });
+    });
+});
+app.get("/sign", (req, res) => {
+    let userName = req.query.user_name,
+        password = req.query.password;
+    pool.getConnection((err, connection) => {
+        if (err) console.log(err);
+        else {
+            connection.query("INSERT INTO users(user_name, password) VALUES ('" + userName + "', '" + password + "')", (err, result) => {
+                if (err) console.log(err);
+                connection.release();
+            });
+        }
+    });
+    res.end();
+});
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

@@ -2,27 +2,25 @@ import React, {Component} from 'react';
 import Articlecard from "./../../components/Articlecard/Articlecard";
 import {connect} from 'react-redux';
 import axios from 'axios';
-import {initArticles, changeShowArticles} from './../../actions/reducer.js';
-import {Row, Col, Radio} from 'antd';
+import {initArticles, changeShowArticles, changeLoading} from './../../actions/reducer.js';
+import {Row, Col, Radio, List} from 'antd';
 import 'antd/lib/row/style/css';
+import 'antd/lib/list/style/css';
 import 'antd/lib/radio/style/css';
 
-const stateToProps = state => ({showArticles: state.showArticles, showState: state.showState, initState: state.initState.initArticles});
+const stateToProps = state => ({showArticles: state.showArticles, showState: state.showState, initState: state.initState.initArticles, loading: state.loading});
 const stateToDispatch = dispatch => {
     return {
         doInitArticles: () => {
-            axios.get("http://localhost:9000/initarticles").then((response) => {
+            axios.get("http://47.111.165.97:9000/initarticles").then((response) => {
                 dispatch(initArticles(response.data));
             });
         },
-        doChangeShowArticles: (state) => {
-            axios.get("http://localhost:9000/sort", {
-                params: {
-                    type: state
-                }
-            }).then((response) => {
-                dispatch(changeShowArticles(state, response.data));
-            });
+        doChangeShowArticles: (state, articles) => {
+            dispatch(changeShowArticles(state, articles));
+        },
+        doChangeLoading: (loading) => {
+            dispatch(changeLoading(loading));
         }
     }
 };
@@ -31,13 +29,26 @@ class Mainpage extends Component {
     constructor(props) {
         super(props);
         if (this.props.initState === false) {
+            this.props.doChangeLoading(Object.assign({}, this.props.loading, {articleLoading: true}));
             this.props.doInitArticles();
         }
+    }
+    componentDidMount() {
+        this.props.doChangeLoading(Object.assign({}, this.props.loading, {articleLoading: false}));
     }
     handleChange = (e) => {
         let newState = e.target.value;
         if (newState !== this.props.showState) {
-            this.props.doChangeShowArticles(newState);
+            this.props.doChangeLoading(Object.assign({}, this.props.loading, {articleLoading: true}));
+            axios.get("http://47.111.165.97:9000/sort", {
+                params: {
+                    type: newState
+                }
+            }).then((response) => {
+                this.props.doChangeShowArticles(newState, response.data);
+            }).then(() => {
+                this.props.doChangeLoading(Object.assign({}, this.props.loading, {articleLoading: false}));
+            });
         }
     }
     render() {
@@ -53,17 +64,21 @@ class Mainpage extends Component {
                     </Radio.Group>
                 </Col>
             </Row>
-            {
-                this.props.showArticles.map((item, key) => {
-                    return (<div style={{
-                            margin: '1em',
-                            width: 'calc((100% - 6em) / 3)',
-                            display: 'inline-block'
-                        }} key={`article-div${key}`}>
-                        <Articlecard key={`article${key}`} article={item}/>
-                    </div>);
-                })
-            }
+            <List
+                style={{ margin: '1em auto'}}
+                loading={this.props.loading.articleLoading}
+                dataSource={this.props.showArticles}
+                pagination={{
+                    pageSize: 15,
+                    hideOnSinglePage: true,
+                    showQuickJumper: true
+                }} renderItem={(item, key) => (<div style={{
+                        margin: '1em',
+                        width: 'calc((100% - 6em) / 3)',
+                        display: 'inline-block'
+                    }} key={`article-div${key}`}>
+                    <Articlecard key={`article${key}`} article={item}/>
+                </div>)}/>
         </div>);
     }
 }

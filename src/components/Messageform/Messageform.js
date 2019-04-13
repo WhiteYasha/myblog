@@ -64,9 +64,10 @@ class Messageform extends Component {
                         data = {
                             params: message
                         };
-                    axios.get("http://localhost:9000/message", data).then(() => {
+                    axios.get("http://47.111.165.97:9000/message", data).then(() => {
                         this.props.doAddMessage(message);
                     }).then(() => {
+                        this.props.form.resetFields();
                         this.props.doChangeLoading(Object.assign({}, this.props.loading, {messageLoading: false}));
                     });
                 }

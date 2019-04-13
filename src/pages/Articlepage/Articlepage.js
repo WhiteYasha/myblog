@@ -66,7 +66,7 @@ class Articlepage extends Component {
                 }
             };
             console.log(data);
-            axios.get("http://localhost:9000/like", data);
+            axios.get("http://47.111.165.97:9000/like", data);
         }
     }
     render() {

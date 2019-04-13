@@ -1,68 +1,51 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 项目概述
 
-## Available Scripts
 
-In the project directory, you can run:
+- Ant  Design+React+Redux实现前端页面
 
-### `npm start`
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- Node.js+Express+Mysql实现后端服务
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+- 路由功能使用的是React-Router
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+由于是学习React的第一个练手项目，所以更多的考虑到功能的实现方面，并没有太多考虑其他因素比如服务器接口的承载能力以及网页安全问题等，等以后学习了更多之后再找时间重构一下。
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 项目目录
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```
+└── myblog
+    ├──components # 自定义组件
+    ├──pages # 页面组件
+    ├──actions # 动作封装
+    ├── node_modules # 依赖模块
+    ├── package.json # 依赖配置
+    ├── app.js # 应用
+```
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## 功能
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+- [x] 用户登录
+- [ ] 用户注册
+- [x] 文章点赞
+- [x] 留言
+- [ ] 相册（感觉没什么用，可能会放弃实现）
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 参考资料
 
-### Code Splitting
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
 
-### Analyzing the Bundle Size
+> 教程 [Node.js连接MySQL](http://www.runoob.com/nodejs/nodejs-mysql.html)
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
 
-### Making a Progressive Web App
+> 教程 [Git,Node.js教程](http://manqc.site)
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
 
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+> 教程 [小白入门使用Nginx基础的常用操作](https://www.cnblogs.com/linuxprobe/p/10652058.html) 

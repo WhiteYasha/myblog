@@ -5,6 +5,7 @@ const CHANGE_WATCH_ARTICLE = "CHANGE_WATCH_ARTICLE";
 const CHANGE_SHOW_ARTICLES = "CHANGE_SHOW_ARTICLES";
 const CHANGE_LIKES = "CHANGE_LIKES";
 const LOG_IN = "LOG_IN";
+const LOG_OUT = "LOG_OUT";
 const CHANGE_LOADING = "CHANGE_LOADING";
 const ADD_MESSAGE = "ADD_MESSAGE";
 const CHANGE_SIGN_VISIBLE = "CHANGE_SIGN_VISIBLE";
@@ -55,6 +56,9 @@ export const changeShowArticles = (sorttype, articles) => ({
 export const logIn = (user) => ({
     type: LOG_IN,
     user
+});
+export const logOut = () => ({
+    type: LOG_OUT
 });
 export const changeLikes = (id, likes, likeuser) => ({
     type: CHANGE_LIKES,
@@ -130,6 +134,13 @@ const appReducer = (state = initialState, action) => {
                 return Object.assign({}, state, {
                     user: action.user,
                     isLoggedIn: true
+                });
+            }
+        case LOG_OUT:
+            {
+                return Object.assign({}, state, {
+                    user: null,
+                    isLoggedIn: false
                 });
             }
         case CHANGE_LIKES:

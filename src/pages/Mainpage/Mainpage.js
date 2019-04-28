@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import Articlecard from "./../../components/Articlecard/Articlecard";
 import {connect} from 'react-redux';
 import axios from 'axios';
-import {initArticles, changeShowArticles, changeLoading} from './../../actions/reducer.js';
+import {initArticles, changeShowArticles, changeLoading, logIn} from './../../actions/reducer.js';
 import {Row, Col, Radio, List} from 'antd';
 import 'antd/lib/row/style/css';
 import 'antd/lib/list/style/css';
@@ -21,6 +21,9 @@ const stateToDispatch = dispatch => {
         },
         doChangeLoading: (loading) => {
             dispatch(changeLoading(loading));
+        },
+        doLogIn: (user) => {
+            dispatch(logIn(user));
         }
     }
 };
@@ -34,6 +37,27 @@ class Mainpage extends Component {
         }
     }
     componentDidMount() {
+        var user = JSON.parse(localStorage.getItem("user"));
+        if (user !== null) {
+            let userName = user.user_name,
+                password = user.password;
+            let data = {
+                params: {
+                    userName: userName,
+                    password: password
+                }
+            };
+            this.props.doChangeLoading(Object.assign({}, this.props.loading, {logLoading: true}));
+            axios.get("http://47.111.165.97:9000/loginsuccess", data)
+            .then((res) => {
+                let token = res.data;
+                axios.defaults.headers.common.authorization = token;
+            })
+            .then(() => {
+                this.props.doLogIn(user);
+                this.props.doChangeLoading(Object.assign({}, this.props.loading, {logLoading: false}));
+            });
+        }
         this.props.doChangeLoading(Object.assign({}, this.props.loading, {articleLoading: false}));
     }
     handleChange = (e) => {

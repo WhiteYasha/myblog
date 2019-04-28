@@ -66,6 +66,7 @@ class Loginpage extends Component {
                             axios.defaults.headers.common.authorization = token;
                         })
                         .then(() => {
+                            localStorage.setItem("user", JSON.stringify(user[0]));
                             message.success("登录成功!");
                             this.props.doLogIn(user[0]);
                             this.props.doChangeLoading(Object.assign({}, this.props.loading, {logLoading: false}));

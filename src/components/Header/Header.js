@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import './Header.css';
 import {connect} from 'react-redux';
-import {changeItem} from './../../actions/reducer.js';
-import {Row, Col, Menu, Icon, Avatar} from 'antd';
+import {changeItem, logOut} from './../../actions/reducer.js';
+import {Row, Col, Menu, Icon, Avatar, Modal} from 'antd';
 import 'antd/lib/avatar/style/css';
+import 'antd/lib/modal/style/css';
 import 'antd/lib/menu/style/css';
 import 'antd/lib/row/style/css';
 import {Link} from 'react-router-dom';
@@ -18,6 +19,9 @@ const stateToDispatch = dispatch => {
     return {
         doChangeItem: (item) => {
             dispatch(changeItem(item));
+        },
+        doLogOut: () => {
+            dispatch(logOut());
         }
     }
 };
@@ -36,9 +40,21 @@ class Header extends Component {
         else
             activeItem = "article";
         this.props.doChangeItem(activeItem);
+        this.state = {logOutVisible: false};
     }
     changePage = key => {
         this.props.doChangeItem(key);
+    }
+    handleClick = e => {
+        this.setState({logOutVisible: true});
+    }
+    handleOK = e => {
+        this.props.doLogOut();
+        localStorage.removeItem("user");
+        this.setState({logOutVisible: false});
+    }
+    handleCancel = e => {
+        this.setState({logOutVisible: false});
     }
     render() {
         return (<Row style={{
@@ -54,8 +70,8 @@ class Header extends Component {
                         this.props.isLoggedIn
                             ? <Item key="avatar" style={{
                                         marginLeft: '3%'
-                                    }} disabled>
-                                    <Avatar>{this.props.user.user_name.substring(0, 3)}</Avatar>
+                                    }}>
+                                    <Avatar onClick={this.handleClick}>{this.props.user.user_name.substring(0, 3)}</Avatar>
                                 </Item>
                             : <Item key="login" style={{
                                         marginLeft: '3%'
@@ -82,6 +98,14 @@ class Header extends Component {
                         </Link>
                     </Item>
                 </Menu>
+                <Modal
+                    title="退出登录"
+                    visible={this.state.logOutVisible}
+                    onOk={this.handleOK}
+                    onCancel={this.handleCancel}
+                >
+                    <p>确定退出登录吗?</p>
+                </Modal>
             </Col>
         </Row>);
     }

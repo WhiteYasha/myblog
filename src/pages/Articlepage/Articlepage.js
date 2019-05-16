@@ -17,7 +17,7 @@ const stateToProps = state => ({
     watchArticle: state.watchArticle,
     article: state.watchArticle === -1
         ? null
-        : state.articles[state.articles.length - state.watchArticle]
+        : state.articles.filter((item) => item.id === state.watchArticle)[0]
 });
 const stateToDispatch = dispatch => {
     return {
@@ -70,6 +70,7 @@ class Articlepage extends Component {
         }
     }
     render() {
+        console.log(this.props.article);
         if (this.props.watchArticle === -1)
             return <Empty/>;
         else

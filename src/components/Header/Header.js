@@ -42,7 +42,7 @@ class Header extends Component {
         this.props.doChangeItem(activeItem);
         this.state = {logOutVisible: false};
     }
-    changePage = key => {
+    changeItem = key => {
         this.props.doChangeItem(key);
     }
     handleClick = e => {
@@ -57,57 +57,53 @@ class Header extends Component {
         this.setState({logOutVisible: false});
     }
     render() {
-        return (<Row style={{
-                marginBottom: 'calc(48px + 1em)'
-            }}>
-            <Col span={24} style={{
-                    width: '100%',
-                    height: '300px'
-                }}>
-                <div className="header-img"/>
-                <Menu mode="horizontal" selectedKeys={this.props.activeItem} onClick={(item) => this.changePage(item.key)}>
-                    {
-                        this.props.isLoggedIn
-                            ? <Item key="avatar" style={{
-                                        marginLeft: '3%'
-                                    }}>
-                                    <Avatar onClick={this.handleClick}>{this.props.user.user_name.substring(0, 3)}</Avatar>
-                                </Item>
-                            : <Item key="login" style={{
-                                        marginLeft: '3%'
-                                    }}>
-                                    <Link to="/login">登陆</Link>
-                                </Item>
-                    }
-                    {
-                        this.props.isLoggedIn
-                            ? <span>{this.props.user.user_name}</span>
-                            : null
-                    }
-                    <Item className="header-menu-item" key="message">
-                        <Link to="/message">
-                            <Icon type="message"/>留言
-                        </Link>
-                    </Item>
-                    <Item className="header-menu-item" key="picture" disabled>
-                        <Icon type="picture"/>相册
-                    </Item>
-                    <Item className="header-menu-item" key="article">
-                        <Link to="/">
-                            <Icon type="book"/>文章
-                        </Link>
-                    </Item>
-                </Menu>
-                <Modal
-                    title="退出登录"
-                    visible={this.state.logOutVisible}
-                    onOk={this.handleOK}
-                    onCancel={this.handleCancel}
-                >
-                    <p>确定退出登录吗?</p>
-                </Modal>
-            </Col>
-        </Row>);
+        return (
+            <Row style={{marginBottom: 'calc(48px + 1em)'}}>
+                <Col span={24} style={{width: '100%', height: '300px'}}>
+                    <div className="header-img"/>
+                    <Menu
+                        mode="horizontal"
+                        selectedKeys={this.props.activeItem}
+                        onClick={(item) => this.changeItem(item.key)}
+                    >
+                        {
+                            this.props.isLoggedIn ?
+                            (<Item key="avatar" style={{marginLeft: '3%'}}>
+                                <Avatar onClick={this.handleClick} src={this.props.user.avatar}/>
+                            </Item>)
+                            :
+                            (<Item key="login" style={{marginLeft: '3%'}}>
+                                <Link to="/login">登陆</Link>
+                            </Item>)
+                        }
+                        {
+                            this.props.isLoggedIn ? <span>{this.props.user.name}</span> : null
+                        }
+                        <Item className="header-menu-item" key="message">
+                            <Link to="/message">
+                                <Icon type="message"/>留言
+                            </Link>
+                        </Item>
+                        <Item className="header-menu-item" key="picture" disabled>
+                            <Icon type="picture"/>相册
+                        </Item>
+                        <Item className="header-menu-item" key="article">
+                            <Link to="/">
+                                <Icon type="book"/>文章
+                            </Link>
+                        </Item>
+                    </Menu>
+                    <Modal
+                        title="退出登录"
+                        visible={this.state.logOutVisible}
+                        onOk={this.handleOK}
+                        onCancel={this.handleCancel}
+                    >
+                        <p>确定退出登录吗?</p>
+                    </Modal>
+                </Col>
+            </Row>
+        );
     }
 }
 

@@ -1,14 +1,13 @@
 const INIT_ARTICLES = "INIT_ARTICLES";
 const INIT_MESSAGES = "INIT_MESSAGES";
+const INIT_LIKE_ARTICLES = "INIT_LIKE_ARTICLES";
 const CHANGE_ITEM = "CHANGE_ITEM";
 const CHANGE_WATCH_ARTICLE = "CHANGE_WATCH_ARTICLE";
-const CHANGE_SHOW_ARTICLES = "CHANGE_SHOW_ARTICLES";
-const CHANGE_LIKES = "CHANGE_LIKES";
 const LOG_IN = "LOG_IN";
 const LOG_OUT = "LOG_OUT";
-const CHANGE_LOADING = "CHANGE_LOADING";
 const ADD_MESSAGE = "ADD_MESSAGE";
-const CHANGE_SIGN_VISIBLE = "CHANGE_SIGN_VISIBLE";
+const SORT_ARTICLES = "SORT_ARTICLES";
+const TOGGLE_LIKE_ARTICLE = "TOGGLE_LIKE_ARTICLE";
 
 const initialState = ({
     user: null,
@@ -17,18 +16,13 @@ const initialState = ({
     activeItem: null,
     articles: [],
     showArticles: [],
+    likeArticles: [],
     messages: [],
     initState: {
         initArticles: false,
         initMessages: false
     },
-    showState: "publishtime",
-    loading: {
-        articleLoading: false,
-        messageLoading: false,
-        logLoading: false,
-        signLoading: false
-    },
+    showState: "publishTime",
     signVisible: false
 });
 
@@ -40,6 +34,10 @@ export const initMessages = messages => ({
     type: INIT_MESSAGES,
     messages
 });
+export const initLikeArticles = articles => ({
+    type: INIT_LIKE_ARTICLES,
+    articles
+});
 export const changeItem = item => ({
     type: CHANGE_ITEM,
     item
@@ -48,11 +46,6 @@ export const changeWatchArticle = id => ({
     type: CHANGE_WATCH_ARTICLE,
     id
 });
-export const changeShowArticles = (sorttype, articles) => ({
-    type: CHANGE_SHOW_ARTICLES,
-    sorttype,
-    articles
-});
 export const logIn = (user) => ({
     type: LOG_IN,
     user
@@ -60,23 +53,17 @@ export const logIn = (user) => ({
 export const logOut = () => ({
     type: LOG_OUT
 });
-export const changeLikes = (id, likes, likeuser) => ({
-    type: CHANGE_LIKES,
-    id,
-    likes,
-    likeuser
-});
-export const changeLoading = (loading) => ({
-    type: CHANGE_LOADING,
-    loading
-})
 export const addMessage = message => ({
     type: ADD_MESSAGE,
     message
 });
-export const changeSignVisible = visible => ({
-    type: CHANGE_SIGN_VISIBLE,
-    visible
+export const sortArticles = state => ({
+    type: SORT_ARTICLES,
+    state
+});
+export const toggleLikeArticle = articleID => ({
+    type: TOGGLE_LIKE_ARTICLE,
+    articleID
 });
 
 const appReducer = (state = initialState, action) => {
@@ -89,6 +76,12 @@ const appReducer = (state = initialState, action) => {
                     initState: Object.assign({}, state.initState, {
                         initArticles: true
                     })
+                });
+            }
+        case INIT_LIKE_ARTICLES:
+            {
+                return Object.assign({}, state, {
+                    likeArticles: action.articles
                 });
             }
         case INIT_MESSAGES:
@@ -122,13 +115,6 @@ const appReducer = (state = initialState, action) => {
                     })
                 });
             }
-        case CHANGE_SHOW_ARTICLES:
-            {
-                return Object.assign({}, state, {
-                    showArticles: action.articles,
-                    showState: action.sorttype
-                });
-            }
         case LOG_IN:
             {
                 return Object.assign({}, state, {
@@ -143,41 +129,66 @@ const appReducer = (state = initialState, action) => {
                     isLoggedIn: false
                 });
             }
-        case CHANGE_LIKES:
-            {
-                return Object.assign({}, state, {
-                    articles: state.articles.map((item) => {
-                        return item.id === action.id ? Object.assign({}, item, {
-                            likes: action.likes,
-                            likeuser: action.likeuser
-                        }) : item;
-                    }),
-                    showArticles: state.showArticles.map((item) => {
-                        return item.id === action.id ? Object.assign({}, item, {
-                            likes: action.likes,
-                            likeuser: action.likeuser
-                        }) : item;
-                    })
-                });
-            }
-        case CHANGE_LOADING:
-            {
-                return Object.assign({}, state, {
-                    loading: action.loading
-                });
-            }
         case ADD_MESSAGE:
             {
-                var newState = Object.assign({}, state);
-                newState.messages.unshift(action.message);
-                console.log(newState);
-                return newState;
-            }
-        case CHANGE_SIGN_VISIBLE:
-            {
                 return Object.assign({}, state, {
-                    signVisible: action.visible
+                    messages: [action.message].concat(state.messages)
                 });
+            }
+        case SORT_ARTICLES:
+            {
+                if (action.state === "publishTime") {
+                    return Object.assign({}, state, {
+                        showState: action.state,
+                        showArticles: state.articles.sort((a, b) => {
+                            return b.publishTime.localeCompare(a.publishTime);
+                        })
+                    });
+                }
+                else if (action.state === "likes") {
+                    return Object.assign({}, state, {
+                        showState: action.state,
+                        showArticles: state.articles.sort((a, b) => {
+                            return b.likes - a.likes;
+                        })
+                    });
+                }
+                else {
+                    return Object.assign({}, state, {
+                        showState: action.state,
+                        showArticles: state.articles.sort((a, b) => {
+                            return b.views - a.views;
+                        })
+                    });
+                }
+            }
+        case TOGGLE_LIKE_ARTICLE:
+            {
+                const id = action.articleID;
+                if (state.likeArticles.indexOf(id) !== -1) {
+                    // 取消喜欢
+                    return Object.assign({}, state, {
+                        articles: state.articles.map((item) => {
+                            return item.id === id ? Object.assign({}, item, {likes: item.likes - 1}) : item;
+                        }),
+                        showArticles: state.showArticles.map((item) => {
+                            return item.id === id ? Object.assign({}, item, {likes: item.likes - 1}) : item
+                        }),
+                        likeArticles: state.likeArticles.filter((item) => item !== id)
+                    });
+                }
+                else {
+                    // 喜欢文章
+                    return Object.assign({}, state, {
+                        articles: state.articles.map((item) => {
+                            return item.id === id ? Object.assign({}, item, {likes: item.likes + 1}) : item;
+                        }),
+                        showArticles: state.showArticles.map((item) => {
+                            return item.id === id ? Object.assign({}, item, {likes: item.likes + 1}) : item
+                        }),
+                        likeArticles: state.likeArticles.concat([id])
+                    });
+                }
             }
         default:
             return state;

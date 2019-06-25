@@ -6,18 +6,16 @@ import 'antd/lib/avatar/style/css';
 import Messageform from './../../components/Messageform/Messageform';
 import axios from 'axios';
 import {connect} from 'react-redux';
-import {initMessages, changeLoading} from './../../actions/reducer.js';
+import {initMessages} from './../../actions/reducer.js';
 
-const stateToProps = state => ({messages: state.messages, loading: state.loading});
+const stateToProps = state => ({
+    messages: state.messages,
+    initState: state.initState.initMessages
+});
 const stateToDispatch = dispatch => {
     return {
-        doInitMessages: () => {
-            axios.get("http://47.111.165.97:9000/initmessages").then((response) => {
-                dispatch(initMessages(response.data));
-            });
-        },
-        doChangeLoading: (loading) => {
-            dispatch(changeLoading(loading));
+        doInitMessages: (messages) => {
+            dispatch(initMessages(messages));
         }
     }
 };
@@ -25,31 +23,36 @@ const stateToDispatch = dispatch => {
 class Messagepage extends Component {
     constructor(props) {
         super(props);
-        this.props.doChangeLoading(Object.assign({}, this.props.loading, {messageLoading: true}));
-        this.props.doInitMessages();
-    }
-    componentDidMount() {
-        this.props.doChangeLoading(Object.assign({}, this.props.loading, {messageLoading: false}));
+        this.state = {loading: this.props.initState ? false : true};
+        if (!this.props.initState) {
+            axios.get("http://localhost:9000/getMessages")
+            .then((response) => {
+                this.props.doInitMessages(response.data);
+                this.setState({loading: false});
+            });
+        }
     }
     render() {
-        return (<div style={{
-                padding: '0 10%'
-            }}>
-            <Messageform/>
-            <List loading={this.props.loading.messageLoading} pagination={{
-                    onChange: (page) => {
-                        console.log(page);
-                    },
-                    pageSize: 10
-                }} itemLayout="vertical" dataSource={this.props.messages} style={{
-                    padding: '1em 2em'
-                }} renderItem={item => (<Comment avatar={<Avatar> {
-                        item.user_name.substring(0, 3)
+        return (
+            <div style={{padding: '0 10%'}}>
+                <Messageform/>
+                <List
+                    loading={this.state.loading}
+                    pagination={{pageSize: 10}}
+                    itemLayout="vertical"
+                    dataSource={this.props.messages}
+                    style={{padding: '1em 2em'}}
+                    renderItem={
+                        item => (
+                            <Comment
+                                avatar={<Avatar src={item.avatar} />}
+                                author={item.name}
+                                datetime={item.messageTime}
+                                content={<p>{item.content}</p>}
+                            />
+                        )
                     }
-                    </Avatar>} author={item.user_name} datetime={item.messagetime} content={<p> {
-                        item.message
-                    }
-                    </p>}/>)}/>
+                />
         </div>);
     }
 }

@@ -3,3 +3,8 @@
     width: 200px;
     margin: 1em 1em;
 }
+.footer-contact {
+    border-bottom: 2px #1890ff solid;
+    width: 8em;
+    margin-left: calc(50% - 4em);
+}

@@ -12,14 +12,7 @@ const {Paragraph} = Typography;
 const stateToProps = state => ({watchArticle: state.watchArticle});
 const stateToDispatch = dispatch => {
     return {
-        doChangeWatchArticle: (id, views) => {
-            let data = {
-                params: {
-                    id: id,
-                    views: views
-                }
-            };
-            axios.get("http://47.111.165.97:9000/view", data);
+        doChangeWatchArticle: (id) => {
             dispatch(changeWatchArticle(id));
         }
     }
@@ -54,23 +47,25 @@ class Articlecard extends Component {
                 return "";
         }
     }
-    handleClick = () => {
-        this.props.doChangeWatchArticle(this.props.article.id, this.props.article.views + 1);
+    handleClick = (id) => {
+        let data = {
+            params: {id: id}
+        };
+        axios.get("http://localhost:9000/view", data)
+        .then(() => {
+            this.props.doChangeWatchArticle(id);
+        });
     }
     render() {
-        return (<Card title={this.props.article.title} extra={<Link to = "/article" onClick = {
-                this.handleClick
-            } > More</Link>}>
-            <Paragraph style={{
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis'
-                }}>
+        return (
+            <Card
+                title={this.props.article.title}
+                extra={<Link to="/article" onClick={() => this.handleClick(this.props.article.id)}>More</Link>}
+            >
+            <Paragraph style={{whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>
                 {this.props.article.intro}
             </Paragraph>
-            <div style={{
-                    clear: 'both'
-                }}>
+            <div style={{clear: 'both'}}>
                 {
                     this.props.article.tags === null ? null : this.props.article.tags.map((item, key) => {
                         return <Tag color={this.tagColor(item)} key={`tag${key}`}>{item}</Tag>;
@@ -85,10 +80,8 @@ class Articlecard extends Component {
                     <Icon type="like" style={{padding: '0 0.5em 0 1em'}}/>{this.props.article.likes}
                 </span>
             </small>
-            <small style={{
-                    float: 'right'
-                }}>
-                {this.props.article.publishtime}
+            <small style={{float: 'right'}}>
+                {this.props.article.publishTime}
             </small>
         </Card>);
     }

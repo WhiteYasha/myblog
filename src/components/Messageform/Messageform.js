@@ -40,13 +40,18 @@ class Messageform extends Component {
                             content: this.props.form.getFieldValue("content"),
                             messageTime: moment().format(datetimeFormat)
                         };
-                    console.log(message);
                     this.setState({loading: true});
                     axios.get("http://localhost:9000/postMessage", {params: message})
-                    .then(() => {
-                        this.props.doAddMessage(message);
-                        this.props.form.resetFields();
-                        this.setState({loading: false});
+                    .then((response) => {
+                        if (response.data.err) {
+                            message.error("发表留言失败!");
+                            this.setState({loading: false});
+                        }
+                        else {
+                            this.props.doAddMessage(message);
+                            this.props.form.resetFields();
+                            this.setState({loading: false});
+                        }
                     });
                 }
             }

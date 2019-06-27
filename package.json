@@ -8,6 +8,8 @@
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "express": "^4.16.4",
+    "for-editor": "^0.2.6",
+    "formidable": "^1.2.1",
     "github-markdown-css": "^3.0.1",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",

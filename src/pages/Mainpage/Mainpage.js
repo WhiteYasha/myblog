@@ -3,12 +3,13 @@ import Articlecard from "./../../components/Articlecard/Articlecard";
 import {connect} from 'react-redux';
 import axios from 'axios';
 import {initArticles, logIn, sortArticles, initLikeArticles} from './../../actions/reducer.js';
-import {Row, Col, Radio, List} from 'antd';
+import {Row, Col, Radio, List, message} from 'antd';
 import 'antd/lib/row/style/css';
 import 'antd/lib/list/style/css';
 import 'antd/lib/radio/style/css';
 
 const stateToProps = state => ({
+    isLoggedIn: state.isLoggedIn,
     showArticles: state.showArticles,
     showState: state.showState,
     initState: state.initState.initArticles
@@ -37,29 +38,42 @@ class Mainpage extends Component {
         if (!this.props.initState) {
             axios.get("http://localhost:9000/getArticles")
             .then((response) => {
-                this.props.doInitArticles(response.data);
-                this.setState({loading: false});
+                if (response.data.error) {
+                    message.error("初始化文章数据失败!");
+                    this.setState({loading: false});
+                }
+                else {
+                    this.props.doInitArticles(response.data.result);
+                    this.setState({loading: false});
+                }
             });
         }
     }
     componentWillMount() {
         var user = JSON.parse(localStorage.getItem("user"));
-        if (user) {
+        if (user && !this.props.isLoggedIn) {
             let name = user.name;
             let data = {
                 params: {name: name}
             };
+            this.setState({loading: true});
             axios.all([
                 axios.get("http://localhost:9000/loginSuccess", data),
                 axios.get("http://localhost:9000/getLikeArticles", data)
             ]).then(axios.spread((firstResp, secondResp) => {
-                let token = firstResp.data,
-                    likeArticles = secondResp.data;
-                axios.defaults.headers.common.authorization = token;
-
-                this.setState({loading: false});
-                this.props.doLogIn(user);
-                this.props.doInitLikeArticles(likeArticles);
+                if (firstResp.data.error || secondResp.data.error) {
+                    message.error("自动登录失败!");
+                    localStorage.removeItem("user");
+                    this.setState({loading: false});
+                }
+                else {
+                    let token = firstResp.data.result,
+                    likeArticles = secondResp.data.result;
+                    axios.defaults.headers.common.authorization = token;
+                    this.setState({loading: false});
+                    this.props.doLogIn(user);
+                    this.props.doInitLikeArticles(likeArticles);
+                }
             }));
         }
     }

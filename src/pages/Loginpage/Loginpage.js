@@ -19,7 +19,11 @@ import {Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {logIn, initLikeArticles} from './../../actions/reducer.js';
 
-const stateToProps = state => ({user: state.user, isLoggedIn: state.isLoggedIn});
+const stateToProps = state => ({
+    user: state.user,
+    isLoggedIn: state.isLoggedIn,
+    activeItem: state.activeItem
+});
 const stateToDispatch = dispatch => {
     return {
         doLogIn: (user) => {
@@ -51,24 +55,41 @@ class Loginpage extends Component {
                 this.setState({loading: true});
                 axios.get("http://localhost:9000/findUser", data)
                 .then((response) => {
-                    let user = response.data;
-                    if (user.length === 0) message.error("没有此用户!");
-                    else if (user[0].password !== password) message.error("密码错误!");
+                    if (response.data.error) {
+                        message.error("登录失败!");
+                        this.setState({loading: false});
+                    }
                     else {
-                        axios.all([
-                            axios.get("http://localhost:9000/loginSuccess", data),
-                            axios.get("http://localhost:9000/getLikeArticles", data)
-                        ]).then(axios.spread((firstResp, secondResp) => {
-                            let token = firstResp.data,
-                                likeArticles = secondResp.data;
-                            axios.defaults.headers.common.authorization = token;
-
-                            localStorage.setItem("user", JSON.stringify(user[0]));
-                            message.success("登录成功!");
+                        let user = response.data.result;
+                        if (user.length === 0) {
+                            message.error("没有此用户!");
                             this.setState({loading: false});
-                            this.props.doLogIn(user[0]);
-                            this.props.doInitLikeArticles(likeArticles);
-                        }));
+                        }
+                        else if (user[0].password !== password) {
+                            message.error("密码错误!");
+                            this.setState({loading: false});
+                        }
+                        else {
+                            axios.all([
+                                axios.get("http://localhost:9000/loginSuccess", data),
+                                axios.get("http://localhost:9000/getLikeArticles", data)
+                            ]).then(axios.spread((firstResp, secondResp) => {
+                                if (firstResp.data.error || secondResp.data.error) {
+                                    message.error("登录失败!");
+                                    this.setState({loading: false});
+                                }
+                                else {
+                                    let token = firstResp.data.result,
+                                    likeArticles = secondResp.data.result;
+                                    axios.defaults.headers.common.authorization = token;
+                                    localStorage.setItem("user", JSON.stringify(user[0]));
+                                    message.success("登录成功!");
+                                    this.setState({loading: false});
+                                    this.props.doLogIn(user[0]);
+                                    this.props.doInitLikeArticles(likeArticles);
+                                }
+                            }));
+                        }
                     }
                 });
             }
@@ -76,7 +97,10 @@ class Loginpage extends Component {
     }
     render() {
         const {getFieldDecorator} = this.props.form;
-        if (this.props.isLoggedIn) return <Redirect to="/" />;
+        if (this.props.isLoggedIn) {
+            if (this.props.activeItem === "message") return <Redirect to="/message" />
+            else return <Redirect to="/" />;
+        }
         else return (
             <Row align="middle">
                 <Col span={8} offset={8}>

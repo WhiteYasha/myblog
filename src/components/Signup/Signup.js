@@ -32,21 +32,33 @@ class Signup extends Component {
                     this.setState({loading: true});
                     axios.get("http://localhost:9000/findUser", {params: {name: name}})
                     .then((response) => {
-                        let exists = response.data.length > 0;
-                        if (exists) message.info("该用户名已存在!");
+                        if (response.data.error) {
+                            message.error("注册失败!");
+                            this.setState({loading: false});
+                        }
                         else {
-                            let data = {
-                                params: {
-                                    name: name,
-                                    password: password
-                                }
-                            };
-                            axios.get("http://localhost:9000/sign", data).then(() => {
-                                message.success("注册成功!");
-                                this.props.form.resetFields();
-                                this.setState({loading: false});
-                                this.props.onCancel();
-                            });
+                            let exists = response.data.result.length > 0;
+                            if (exists) message.info("该用户名已存在!");
+                            else {
+                                let data = {
+                                    params: {
+                                        name: name,
+                                        password: password
+                                    }
+                                };
+                                axios.get("http://localhost:9000/sign", data).then((response) => {
+                                    if (response.data.error) {
+                                        message.error("注册失败!");
+                                        this.setState({loading: false});
+                                    }
+                                    else {
+                                        message.success("注册成功!");
+                                        this.props.form.resetFields();
+                                        this.setState({loading: false});
+                                        this.props.onCancel();
+                                    }
+                                });
+                            }
                         }
                     });
                 }

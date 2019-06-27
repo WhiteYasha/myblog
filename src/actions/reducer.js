@@ -8,6 +8,9 @@ const LOG_OUT = "LOG_OUT";
 const ADD_MESSAGE = "ADD_MESSAGE";
 const SORT_ARTICLES = "SORT_ARTICLES";
 const TOGGLE_LIKE_ARTICLE = "TOGGLE_LIKE_ARTICLE";
+const CHANGE_AVATAR = "CHANGE_AVATAR";
+const CHANGE_ARTICLE_TYPE = "CHANGE_ARTICLE_TYPE";
+const DELETE_MESSAGE = "DELETE_MESSAGE";
 
 const initialState = ({
     user: null,
@@ -64,6 +67,20 @@ export const sortArticles = state => ({
 export const toggleLikeArticle = articleID => ({
     type: TOGGLE_LIKE_ARTICLE,
     articleID
+});
+export const changeAvatar = (name, avatar) => ({
+    type: CHANGE_AVATAR,
+    name,
+    avatar
+});
+export const changeArticleType = (id, articleType) => ({
+    type: CHANGE_ARTICLE_TYPE,
+    id,
+    articleType
+});
+export const deleteMessage = (id) => ({
+    type: DELETE_MESSAGE,
+    id
 });
 
 const appReducer = (state = initialState, action) => {
@@ -189,6 +206,34 @@ const appReducer = (state = initialState, action) => {
                         likeArticles: state.likeArticles.concat([id])
                     });
                 }
+            }
+        case CHANGE_AVATAR:
+            {
+                return Object.assign({}, state, {
+                    user: Object.assign({}, state.user, {
+                        avatar: action.avatar
+                    }),
+                    messages: state.messages.map((item) => {
+                        return item.name === action.name ? Object.assign({}, item, {avatar: action.avatar}) : item;
+                    })
+                });
+            }
+        case CHANGE_ARTICLE_TYPE:
+            {
+                return Object.assign({}, state, {
+                    articles: state.articles.map((item) => {
+                        return item.id === action.id ? Object.assign({}, item, {type: action.articleType}) : item
+                    }),
+                    showArticles: state.showArticles.map((item) => {
+                        return item.id === action.id ? Object.assign({}, item, {type: action.articleType}) : item
+                    })
+                });
+            }
+        case DELETE_MESSAGE:
+            {
+                return Object.assign({}, state, {
+                    messages: state.messages.filter((item) => item.id !== action.id)
+                });
             }
         default:
             return state;

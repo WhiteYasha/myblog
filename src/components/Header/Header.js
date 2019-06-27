@@ -8,12 +8,13 @@ import 'antd/lib/modal/style/css';
 import 'antd/lib/menu/style/css';
 import 'antd/lib/row/style/css';
 import {Link} from 'react-router-dom';
+import EditAvatar from './../EditAvatar/EditAvatar';
 
 const Item = Menu.Item;
 const stateToProps = state => ({
     user: state.user,
+    isLoggedIn: state.isLoggedIn,
     activeItem: [state.activeItem],
-    isLoggedIn: state.isLoggedIn
 });
 const stateToDispatch = dispatch => {
     return {
@@ -40,69 +41,86 @@ class Header extends Component {
         else
             activeItem = "article";
         this.props.doChangeItem(activeItem);
-        this.state = {logOutVisible: false};
+        this.state = {logOutVisible: false, editAvatarVisible: false};
     }
     changeItem = key => {
         this.props.doChangeItem(key);
-    }
-    handleClick = e => {
-        this.setState({logOutVisible: true});
     }
     handleOK = e => {
         this.props.doLogOut();
         localStorage.removeItem("user");
         this.setState({logOutVisible: false});
     }
-    handleCancel = e => {
-        this.setState({logOutVisible: false});
+    handleLogOut = () => {
+        Modal.confirm({
+            title: "退出登录",
+            content: "你确定要退出登录吗?",
+            okText: "确定",
+            cancelText: "取消",
+            onOk: () => {
+                this.props.doLogOut();
+            }
+        });
     }
     render() {
         return (
-            <Row style={{marginBottom: 'calc(48px + 1em)'}}>
-                <Col span={24} style={{width: '100%', height: '300px'}}>
-                    <div className="header-img"/>
-                    <Menu
-                        mode="horizontal"
-                        selectedKeys={this.props.activeItem}
-                        onClick={(item) => this.changeItem(item.key)}
-                    >
-                        {
-                            this.props.isLoggedIn ?
-                            (<Item key="avatar" style={{marginLeft: '3%'}}>
-                                <Avatar onClick={this.handleClick} src={this.props.user.avatar}/>
-                            </Item>)
-                            :
-                            (<Item key="login" style={{marginLeft: '3%'}}>
-                                <Link to="/login">登陆</Link>
-                            </Item>)
-                        }
-                        {
-                            this.props.isLoggedIn ? <span>{this.props.user.name}</span> : null
-                        }
-                        <Item className="header-menu-item" key="message">
-                            <Link to="/message">
-                                <Icon type="message"/>留言
-                            </Link>
-                        </Item>
-                        <Item className="header-menu-item" key="picture" disabled>
-                            <Icon type="picture"/>相册
-                        </Item>
-                        <Item className="header-menu-item" key="article">
-                            <Link to="/">
-                                <Icon type="book"/>文章
-                            </Link>
-                        </Item>
-                    </Menu>
-                    <Modal
-                        title="退出登录"
-                        visible={this.state.logOutVisible}
-                        onOk={this.handleOK}
-                        onCancel={this.handleCancel}
-                    >
-                        <p>确定退出登录吗?</p>
-                    </Modal>
-                </Col>
-            </Row>
+            <div>
+                <Row style={{marginBottom: 'calc(48px + 1em)'}}>
+                    <Col span={24} style={{width: '100%', height: '300px'}}>
+                        <div className="header-img"/>
+                        <Menu
+                            mode="horizontal"
+                            selectedKeys={this.props.activeItem}
+                        >
+                            {
+                                this.props.isLoggedIn ?
+                                (<Menu.SubMenu
+                                    style={{marginLeft: 'calc(100% / 24)'}}
+                                    title={
+                                        <div>
+                                            <Avatar src={this.props.user.avatar}/>
+                                            <span style={{marginLeft: '16px'}}>{this.props.user.name}</span>
+                                        </div>
+                                    }
+                                >
+                                    <Item onClick={() => this.setState({editAvatarVisible: true})}>修改头像</Item>
+                                    {
+                                        this.props.user.type === "ADMIN" ? 
+                                            (<Item key="add" onClick={(item) => this.changeItem(item.key)}>
+                                                <Link to="/addarticle">添加文章</Link>
+                                            </Item>) : null
+                                    }
+                                    <Item onClick={this.handleLogOut}>退出登录</Item>
+                                </Menu.SubMenu>)
+                                :
+                                (<Item key="login" style={{marginLeft: '3%'}}>
+                                    <Link to="/login">登陆</Link>
+                                </Item>)
+                            }
+                            <Item className="header-menu-item" key="message" onClick={(item) => this.changeItem(item.key)}>
+                                <Link to="/message">
+                                    <Icon type="message"/>留言
+                                </Link>
+                            </Item>
+                            <Item className="header-menu-item" key="picture" disabled >
+                                <Icon type="picture"/>相册
+                            </Item>
+                            <Item className="header-menu-item" key="article" onClick={(item) => this.changeItem(item.key)}>
+                                <Link to="/">
+                                    <Icon type="book"/>文章
+                                </Link>
+                            </Item>
+                        </Menu>
+                    </Col>
+                </Row>
+                {
+                    this.props.isLoggedIn ? (
+                    <EditAvatar
+                        visible={this.state.editAvatarVisible}
+                        onCancel={() => this.setState({editAvatarVisible: false})}
+                    />) : null
+                }
+            </div>
         );
     }
 }

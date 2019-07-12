@@ -307,7 +307,7 @@ app.get("/dislikeArticle", (req, res) => {
 });
 app.post("/uploadAvatar", (req, res) => {
     var form = new formidable.IncomingForm();
-    form.uploadDir = "./public/upload/avatar";
+    form.uploadDir = "./upload/avatar";
     form.maxFieldsSize = 2 * 1024 * 1024;
     form.parse(req, (err, fields, files) => {
         let oldpath = files.avatar.path,
@@ -319,7 +319,7 @@ app.post("/uploadAvatar", (req, res) => {
             });
         }
         else {
-            let newpath = "./public/upload/avatar/" + extname;
+            let newpath = "./upload/avatar/" + extname;
             fs.rename(oldpath, newpath, (err) => {
                 if (err) {
                     console.log("头像文件移动: " + err);
@@ -328,7 +328,7 @@ app.post("/uploadAvatar", (req, res) => {
                         result: []
                     });
                 }
-                let respath = newpath.replace("./public", "http://localhost:3000");
+                let respath = newpath.replace("./", "/");
                 res.send({
                     error: 0,
                     result: [respath]

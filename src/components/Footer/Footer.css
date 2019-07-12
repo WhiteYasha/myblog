@@ -1,10 +1,11 @@
-.footer-info {
-    display: inline-block;
-    width: 200px;
-    margin: 1em 1em;
-}
 .footer-contact {
     border-bottom: 2px #1890ff solid;
     width: 8em;
     margin-left: calc(50% - 4em);
+    text-align: center;
+}
+.shareicon {
+    font-size: 16px;
+    margin: 0 0.5em;
+    cursor: pointer;
 }

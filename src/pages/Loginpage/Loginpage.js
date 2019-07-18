@@ -17,7 +17,7 @@ import Signup from './../../components/Signup/Signup';
 import axios from 'axios';
 import {Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {logIn, initLikeArticles} from './../../actions/reducer.js';
+import {logIn, initLikeArticles, changeItem} from './../../actions/reducer.js';
 
 const stateToProps = state => ({
     user: state.user,
@@ -26,6 +26,9 @@ const stateToProps = state => ({
 });
 const stateToDispatch = dispatch => {
     return {
+        doChangeItem: (item) => {
+            dispatch(changeItem(item));
+        },
         doLogIn: (user) => {
             dispatch(logIn(user));
         },
@@ -34,6 +37,16 @@ const stateToDispatch = dispatch => {
         }
     };
 };
+// const getParament = (url, parament) => {
+//     let res = "";
+//     if (url.indexOf(parament) === -1) return res;
+//     const searchPart = url.slice(url.indexOf(parament) + parament.length + 1);
+//     for (let i = 0; i < searchPart.length; i += 1) {
+//         if (searchPart.charAt(i) === "&") break;
+//         else res += searchPart.charAt(i);
+//     }
+//     return res;
+// }
 
 class Loginpage extends Component {
     constructor(props) {
@@ -43,6 +56,24 @@ class Loginpage extends Component {
             loading: false
         };
     }
+    // componentWillMount() {
+    //     const code = getParament(window.location.search, "code");
+    //     if (code) {
+    //         axios.get("http://localhost:9000/getUser", {params: {code: code}})
+    //         .then((response) => {
+    //             if (response.data.error) {
+    //                 window.location.href = "http://wyasha.top";
+    //             }
+    //             else {
+    //                 let name = response.data.result.name,
+    //                     avatar = response.data.result.avatar_url;
+    //             }
+    //         });
+    //     }
+    // }
+    // handleClick = (e) => {
+    //     window.location.href = "https://github.com/login/oauth/authorize?client_id=c92a88682c6475987243";
+    // }
     handleSubmit = (e) => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
@@ -85,6 +116,7 @@ class Loginpage extends Component {
                                     localStorage.setItem("user", JSON.stringify(user[0]));
                                     message.success("登录成功!");
                                     this.setState({loading: false});
+                                    this.props.doChangeItem("article");
                                     this.props.doLogIn(user[0]);
                                     this.props.doInitLikeArticles(likeArticles);
                                 }
@@ -140,6 +172,7 @@ class Loginpage extends Component {
                                 登录
                             </Button>
                             或<a onClick={() => this.setState({signVisible: true})}>马上注册!</a>
+                            {/* <Button onClick={this.handleClick}>GITHUB</Button> */}
                         </Form.Item>
                     </Form>
                 </Col>

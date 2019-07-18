@@ -78,7 +78,7 @@ class Signup extends Component {
                 <Form onSubmit={this.handleSubmit}>
                     <Form.Item>
                         {
-                            getFieldDecorator("userName", {
+                            getFieldDecorator("name", {
                                 rules: [
                                     {required: true, message: "请输入用户名!"},
                                     {max: 15, messgae: "用户名最长不能大于15字!"}

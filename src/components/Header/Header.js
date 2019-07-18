@@ -59,6 +59,7 @@ class Header extends Component {
             cancelText: "取消",
             onOk: () => {
                 this.props.doLogOut();
+                localStorage.removeItem("user");
             }
         });
     }
@@ -93,7 +94,7 @@ class Header extends Component {
                                     <Item onClick={this.handleLogOut}>退出登录</Item>
                                 </Menu.SubMenu>)
                                 :
-                                (<Item key="login" style={{marginLeft: '3%'}}>
+                                (<Item key="login" style={{marginLeft: '3%'}} onClick={(item) => this.changeItem(item.key)}>
                                     <Link to="/login">登陆</Link>
                                 </Item>)
                             }

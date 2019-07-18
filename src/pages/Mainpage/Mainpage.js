@@ -50,7 +50,7 @@ class Mainpage extends Component {
         }
     }
     componentWillMount() {
-        var user = JSON.parse(localStorage.getItem("user"));
+        const user = JSON.parse(localStorage.getItem("user"));
         if (user && !this.props.isLoggedIn) {
             let name = user.name;
             let data = {
@@ -87,9 +87,7 @@ class Mainpage extends Component {
     }
     render() {
         return (<div>
-            <Row style={{
-                    padding: "0 1em"
-                }} align="middle">
+            <Row style={{padding: "0 1em"}} align="middle">
                 <Col span={8} offset={16}>
                     <Radio.Group defaultValue="publishTime" onChange={this.handleChange}>
                         <Radio.Button value="publishTime" icon="clock-circle">最新</Radio.Button>
